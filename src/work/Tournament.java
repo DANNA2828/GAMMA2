@@ -22,6 +22,7 @@ public class Tournament {
     public Tournament(int ID, String name, Player[] players) {
         this.ID = ID;
         this.name = name;
+        this.players = new ArrayList<>();
         this.leaderboard = new Leaderboard<>();
         Arrays.stream(players).forEach(this::registerPlayer);
     }
@@ -73,7 +74,7 @@ public class Tournament {
 
     private boolean isRegistered(Player player) {
         for (Player p : players) {
-            if (p.isSame(player)) {
+            if (p.equals(player)) {
                 return true;
             }
         }
@@ -82,7 +83,11 @@ public class Tournament {
 
     private boolean canSubmitResult(Match match) {
         for (int i = 0; i < match.getPlayers().length - 1; i++) {
-            if (match.getPlayers()[i].isSame(match.getPlayers()[i+1])) {
+            if (
+                    match.getPlayers()[i].equals(match.getPlayers()[i+1])
+                    || !isRegistered(match.getPlayers()[i])
+                    || !isRegistered(match.getPlayers()[i])
+            ) {
                 return false;
             }
         }

@@ -14,7 +14,7 @@ public class Leaderboard <T> {
     }
 
     public void addPoints(T object, int amount) {
-        leaderboard.put(object, amount);
+        leaderboard.put(object, leaderboard.get(object) + amount);
     }
 
 }

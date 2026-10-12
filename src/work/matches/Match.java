@@ -15,7 +15,7 @@ public class Match implements Result<Player> {
     public Match(Player[] players) {
         this.players = players;
 
-        int rand = random.nextInt(0, MATCH_PLAYER_NUM);
+        int rand = random.nextInt(0, MATCH_PLAYER_NUM + 1);
         this.winner = rand == MATCH_PLAYER_NUM ? Optional.empty() : Optional.of(players[rand]);
         this.submitted = false;
     }
@@ -41,4 +41,5 @@ public class Match implements Result<Player> {
     public Player[] getPlayers() {
         return players;
     }
+
 }
