@@ -74,7 +74,7 @@ public class Tournament {
 
     private boolean isRegistered(Player player) {
         for (Player p : players) {
-            if (p.equals(player)) {
+            if (p.isSame(player)) {
                 return true;
             }
         }
@@ -84,7 +84,7 @@ public class Tournament {
     private boolean canSubmitResult(Match match) {
         for (int i = 0; i < match.getPlayers().length - 1; i++) {
             if (
-                    match.getPlayers()[i].equals(match.getPlayers()[i+1])
+                    match.getPlayers()[i].isSame(match.getPlayers()[i+1])
                     || !isRegistered(match.getPlayers()[i])
                     || !isRegistered(match.getPlayers()[i+1])
             ) {

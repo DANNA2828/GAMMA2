@@ -12,6 +12,10 @@ public class Player {
         this.rating = rating;
     }
 
+    public boolean isSame(Player other) {
+        return this.equals(other) || ID == other.getID();
+    }
+
     public int getID() {
         return ID;
     }

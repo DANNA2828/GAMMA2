@@ -1,5 +1,6 @@
 package work;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Leaderboard <T> {
@@ -15,7 +16,12 @@ public class Leaderboard <T> {
     }
 
     public void addPoints(T object, int amount) {
-        leaderboard.put(object, leaderboard.get(object) + amount);
+        leaderboard.put(object, (leaderboard.getOrDefault(object, 0)) + amount);
+    }
+
+    public T[] getStandings() {
+        ArrayList<T> standings = new ArrayList<>();
+
     }
 
 }
