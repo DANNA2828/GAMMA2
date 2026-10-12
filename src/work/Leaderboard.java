@@ -4,9 +4,10 @@ import java.util.HashMap;
 
 public class Leaderboard <T> {
 
-    private HashMap<T, Integer> leaderboard;
+    private final HashMap<T, Integer> leaderboard;
 
     public Leaderboard() {
+        this.leaderboard = new HashMap<>();
     }
 
     public void addToLeaderboard(T object) {

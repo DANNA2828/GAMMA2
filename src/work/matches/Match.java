@@ -35,11 +35,11 @@ public class Match implements Result<Player> {
     }
 
     public void setSubmitted(boolean submitted) {
-        this.submitted = submitted;
+        this.submitted = submitted || this.submitted;
     }
 
     public Player[] getPlayers() {
-        return players;
+        return players.clone();
     }
 
 }

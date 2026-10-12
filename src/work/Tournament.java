@@ -86,7 +86,7 @@ public class Tournament {
             if (
                     match.getPlayers()[i].equals(match.getPlayers()[i+1])
                     || !isRegistered(match.getPlayers()[i])
-                    || !isRegistered(match.getPlayers()[i])
+                    || !isRegistered(match.getPlayers()[i+1])
             ) {
                 return false;
             }
