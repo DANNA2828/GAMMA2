@@ -35,12 +35,13 @@ public class Tournament {
         return false;
     }
 
-    public boolean submitResult(Match match) {
+    public boolean submitMatch(Match match) {
         if (canSubmitResult(match)) {
             match.getResult().ifPresentOrElse(
                     player -> leaderboard.addPoints(player, WIN_POINTS),
                     () -> Arrays.stream(match.getPlayers()).forEach(player -> leaderboard.addPoints(player, TIE_POINTS))
             );
+            match.setSubmitted(true);
             return true;
         }
         return false;
