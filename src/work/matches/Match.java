@@ -75,7 +75,7 @@ public class Match implements Result<Player>, WithID, Comparable<Match> {
 
     public Optional<HashMap<Player, Integer>> getScoreChanges(Match other, OperationType operationType, int winPoints, int tiePoints) {
         if (!hasPotentialCorrection(other, operationType)) {
-            Optional.empty();
+            return Optional.empty();
         }
 
         HashMap<Player, Integer> changes = getScoreChanges(winPoints, tiePoints);

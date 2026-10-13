@@ -53,4 +53,12 @@ public class IDList<T extends Comparable<T> & WithID> {
         return Optional.empty();
     }
 
+    public void add(T entry) {
+        entries.add(entry);
+    }
+
+    public void remove(int ID) {
+        getByID(ID).ifPresent(entries::remove);
+    }
+
 }

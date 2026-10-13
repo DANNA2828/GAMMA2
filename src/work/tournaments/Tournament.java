@@ -66,6 +66,9 @@ public class Tournament {
         if (toChange.isPresent()) {
             Optional<HashMap<Player, Integer>> scoreChanges = toChange.get().getScoreChanges(newResult, operationType, winPoints, tiePoints);
             scoreChanges.ifPresent(leaderboard::changePoints);
+
+            matches.remove(matchToChangeID);
+            matches.add(newResult);
             ResultChange.fromMatches(ID, toChange.get(), newResult, operationType, winPoints, tiePoints).ifPresent(resultChanges::add);
         }
     }
