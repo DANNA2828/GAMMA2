@@ -26,8 +26,8 @@ public class IDList<T extends Comparable<T> & WithID> {
     }
 
     public boolean isRegistered(int ID) {
-        for (T p : entries) {
-            if (p.getID() == ID) {
+        for (T e : entries) {
+            if (e.getID() == ID) {
                 return true;
             }
         }

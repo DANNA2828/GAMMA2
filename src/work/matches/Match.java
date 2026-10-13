@@ -1,7 +1,11 @@
 package work.matches;
 import work.Comparable;
 import work.WithID;
+import work.changes.OperationType;
 import work.tournaments.Player;
+
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.Random;
 import java.util.function.Function;
@@ -20,7 +24,7 @@ public class Match implements Result<Player>, WithID, Comparable<Match> {
                 record.matchID(),
                 new Player[] {
                         IDToPlayer.apply(record.player1ID()).orElse(null),
-                        IDToPlayer.apply(record.player2ID())
+                        IDToPlayer.apply(record.player2ID()).orElse(null)
                 },
                 record.winnerNum()
         );
@@ -55,8 +59,51 @@ public class Match implements Result<Player>, WithID, Comparable<Match> {
         return this.equals(other) || ID == other.getID();
     }
 
+    public boolean isWinnerNumSame(Optional<Integer> other) {
+        if (winnerNum.isEmpty()) {
+            return other.isEmpty();
+        } else {
+            if (other.isEmpty()) {
+                return false;
+            } else {
+                return winnerNum.get().equals(other.get());
+            }
+        }
+
+    }
+
+    public HashMap<Player, Integer> getScoreChanges(int winPoints, int tiePoints) {
+        HashMap<Player, Integer> changes = new HashMap<>();
+        getResult().ifPresentOrElse(
+                player -> changes.put(player, winPoints),
+                () -> Arrays.stream(players).forEach(player -> changes.put(player, tiePoints))
+        );
+        return changes;
+    }
+
+    public Optional<HashMap<Player, Integer>> getScoreChanges(Match other, OperationType operationType) {
+        if (!hasPotentialCorrection(other, operationType)) {
+            Optional.empty();
+        }
+
+    }
+
+    public boolean hasPotentialCorrection(Match other, OperationType operationType) {
+        return operationType == OperationType.VOID_RESULT && other == null ||
+                (ID == other.getID() && Arrays.equals(players, other.getPlayers()) &&
+                        (
+                                operationType == OperationType.CHANGE_TIE_STATUS && winnerNum.isPresent() != other.getWinnerNum().isPresent()
+                                || operationType == OperationType.CHANGE_WINNER && !isWinnerNumSame(other.getWinnerNum())
+                        )
+                );
+    }
+
     public Player[] getPlayers() {
         return players.clone();
+    }
+
+    public Optional<Integer> getWinnerNum() {
+        return winnerNum;
     }
 
 }

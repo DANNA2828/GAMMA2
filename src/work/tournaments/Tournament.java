@@ -1,10 +1,13 @@
 package work.tournaments;
 
 import work.IDList;
+import work.changes.ResultChange;
 import work.matches.Match;
 import work.matches.MatchRecord;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Optional;
 
 public class Tournament {
 
@@ -15,6 +18,8 @@ public class Tournament {
     private final IDList<Player> players;
     private final IDList<Match> matches;
     private final Leaderboard<Player> leaderboard;
+    private final ArrayList<ResultChange<Player>> scoreChanges;
+
     private final int winPoints;
     private final int tiePoints;
 
@@ -26,6 +31,8 @@ public class Tournament {
         this.players = new IDList<>();
         this.matches = new IDList<>();
         this.leaderboard = new Leaderboard<>();
+        this.scoreChanges = new ArrayList<>();
+
         this.winPoints = type.getWinPoints();
         this.tiePoints = type.getTiePoints();
 
@@ -41,10 +48,7 @@ public class Tournament {
 
     public void submit(Match match) {
         if (canSubmitResult(match)) {
-            match.getResult().ifPresentOrElse(
-                    player -> leaderboard.addPoints(player, winPoints),
-                    () -> Arrays.stream(match.getPlayers()).forEach(player -> leaderboard.addPoints(player, tiePoints))
-            );
+            leaderboard.changePoints(match.getScoreChanges(winPoints, tiePoints));
             matches.register(match);
         }
     }
@@ -53,6 +57,10 @@ public class Tournament {
         for (MatchRecord record : records) {
             submit(record);
         }
+    }
+
+    public void changeResult(int matchID, Optional<Player> newWinner) {
+        if ()
     }
 
     public void start() {

@@ -29,10 +29,16 @@ public class Leaderboard<T extends Comparable<T> & WithID> {
     }
 
     public void register(T object) {
-        addPoints(object, 0);
+        changePoints(object, 0);
     }
 
-    public void addPoints(T object, int amount) {
+    public void changePoints(HashMap<T, Integer> changes) {
+        for (T e : changes.keySet()) {
+            changePoints(e, changes.get(e));
+        }
+    }
+
+    public void changePoints(T object, int amount) {
         leaderboard.put(getKey(object), (getScore(object) != null ? getScore(object) : 0) + amount);
     }
 
