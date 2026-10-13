@@ -1,5 +1,6 @@
 package work.matches;
 import work.Comparable;
+import work.Helpers;
 import work.WithID;
 import work.changes.OperationType;
 import work.tournaments.Player;
@@ -72,6 +73,18 @@ public class Match implements Result<Player>, WithID, Comparable<Match> {
 
     }
 
+    public Optional<HashMap<Player, Integer>> getScoreChanges(Match other, OperationType operationType, int winPoints, int tiePoints) {
+        if (!hasPotentialCorrection(other, operationType)) {
+            Optional.empty();
+        }
+
+        HashMap<Player, Integer> changes = getScoreChanges(winPoints, tiePoints);
+        changes.replaceAll((player, score) -> -changes.get(player));
+        return Optional.of(Helpers.add(
+                changes, operationType == OperationType.VOID_RESULT ? new HashMap<>() : other.getScoreChanges(winPoints, tiePoints)
+        ));
+    }
+
     public HashMap<Player, Integer> getScoreChanges(int winPoints, int tiePoints) {
         HashMap<Player, Integer> changes = new HashMap<>();
         getResult().ifPresentOrElse(
@@ -79,13 +92,6 @@ public class Match implements Result<Player>, WithID, Comparable<Match> {
                 () -> Arrays.stream(players).forEach(player -> changes.put(player, tiePoints))
         );
         return changes;
-    }
-
-    public Optional<HashMap<Player, Integer>> getScoreChanges(Match other, OperationType operationType) {
-        if (!hasPotentialCorrection(other, operationType)) {
-            Optional.empty();
-        }
-
     }
 
     public boolean hasPotentialCorrection(Match other, OperationType operationType) {

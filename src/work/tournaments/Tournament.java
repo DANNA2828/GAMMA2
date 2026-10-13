@@ -1,12 +1,14 @@
 package work.tournaments;
 
 import work.IDList;
+import work.changes.OperationType;
 import work.changes.ResultChange;
 import work.matches.Match;
 import work.matches.MatchRecord;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Optional;
 
 public class Tournament {
@@ -18,7 +20,7 @@ public class Tournament {
     private final IDList<Player> players;
     private final IDList<Match> matches;
     private final Leaderboard<Player> leaderboard;
-    private final ArrayList<ResultChange<Player>> scoreChanges;
+    private final ArrayList<ResultChange> resultChanges;
 
     private final int winPoints;
     private final int tiePoints;
@@ -31,7 +33,7 @@ public class Tournament {
         this.players = new IDList<>();
         this.matches = new IDList<>();
         this.leaderboard = new Leaderboard<>();
-        this.scoreChanges = new ArrayList<>();
+        this.resultChanges = new ArrayList<>();
 
         this.winPoints = type.getWinPoints();
         this.tiePoints = type.getTiePoints();
@@ -59,8 +61,13 @@ public class Tournament {
         }
     }
 
-    public void changeResult(int matchID, Optional<Player> newWinner) {
-        if ()
+    public void changeResult(int matchToChangeID, Match newResult, OperationType operationType) {
+        Optional<Match> toChange = matches.getByID(matchToChangeID);
+        if (toChange.isPresent()) {
+            Optional<HashMap<Player, Integer>> scoreChanges = toChange.get().getScoreChanges(newResult, operationType, winPoints, tiePoints);
+            scoreChanges.ifPresent(leaderboard::changePoints);
+            ResultChange.fromMatches(ID, toChange.get(), newResult, operationType, winPoints, tiePoints).ifPresent(resultChanges::add);
+        }
     }
 
     public void start() {
@@ -74,7 +81,7 @@ public class Tournament {
     }
 
     private boolean canSubmitResult(Match match) {
-        return arePlayersValid(match) && !matches.isRegistered(match) && !hasStarted;
+        return arePlayersValid(match) && !matches.isRegistered(match) && hasStarted;
     }
 
     private boolean arePlayersValid(Match match) {

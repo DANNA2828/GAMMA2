@@ -1,17 +1,18 @@
 package work.changes;
 
 import work.matches.Match;
+import work.tournaments.Player;
 
 import java.util.HashMap;
 import java.util.Optional;
 
-public record ResultChange<T> (int TournamentID, int matchID, OperationType operationType, HashMap<T, Integer> scoreChanges) {
+public record ResultChange (int TournamentID, int matchID, OperationType operationType, HashMap<Player, Integer> scoreChanges) {
 
-    public static <T> Optional<ResultChange<T>> fromMatches(Match original, Match correction, OperationType operationType, int TournamentID) {
-        if (!original.hasPotentialCorrection(correction, operationType)) {
-            return Optional.empty();
-        }
-
+    public static Optional<ResultChange> fromMatches( int tournamentID, Match original, Match correction, OperationType operationType, int winPoints, int tiePoints) {
+        Optional<HashMap<Player, Integer>> originalScoreChanges = original.getScoreChanges(correction, operationType, winPoints, tiePoints);
+        return originalScoreChanges.map(
+                scoreChanges -> new ResultChange(tournamentID, original.getID(), operationType, scoreChanges)
+        );
     }
 
 }
