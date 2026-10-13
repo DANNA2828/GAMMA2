@@ -13,19 +13,10 @@ public class Match implements Result<Player> {
     private boolean submitted;
 
     public Match(Player[] players) {
-        if (players.length == MATCH_PLAYER_NUM) {
-            this.players = players;
-        } else {
-            this.players = new Player[MATCH_PLAYER_NUM];
-            if (players.length > MATCH_PLAYER_NUM) {
-                for (int i = 0; i < MATCH_PLAYER_NUM; i++) {
-                    this.players[i] = players[i];
-                }
-            }
-        }
+        this.players = players.length == MATCH_PLAYER_NUM ? players : new Player[MATCH_PLAYER_NUM];
 
         int rand = random.nextInt(0, MATCH_PLAYER_NUM + 1);
-        this.winner = rand == MATCH_PLAYER_NUM ? Optional.empty() : Optional.of(players[rand]);
+        this.winner = rand == MATCH_PLAYER_NUM ? Optional.empty() : Optional.of(this.players[rand]);
         this.submitted = false;
     }
 

@@ -1,6 +1,6 @@
 package work;
 
-public class Player {
+public class Player implements Comparable<Player>{
 
     private int ID;
     private String name;
@@ -12,6 +12,7 @@ public class Player {
         this.rating = rating;
     }
 
+    @Override
     public boolean isSame(Player other) {
         return this.equals(other) || ID == other.getID();
     }
