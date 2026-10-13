@@ -1,6 +1,9 @@
-package work;
+package work.tournaments;
 
-public class Player implements Comparable<Player>{
+import work.Comparable;
+import work.WithID;
+
+public class Player implements Comparable<Player>, WithID {
 
     private int ID;
     private String name;
@@ -17,6 +20,7 @@ public class Player implements Comparable<Player>{
         return this.equals(other) || ID == other.getID();
     }
 
+    @Override
     public int getID() {
         return ID;
     }

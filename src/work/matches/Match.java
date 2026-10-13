@@ -1,41 +1,55 @@
 package work.matches;
-import work.Player;
+import work.Comparable;
+import work.WithID;
+import work.tournaments.Player;
 import java.util.Optional;
 import java.util.Random;
+import java.util.function.Function;
 
-public class Match implements Result<Player> {
+public class Match implements Result<Player>, WithID, Comparable<Match> {
 
     public static final int MATCH_PLAYER_NUM = 2;
     private static final Random random = new Random();
 
+    private final int ID;
     private final Player[] players;
-    private final Optional<Player> winner;
-    private boolean submitted;
+    private final Optional<Integer> winnerNum;
 
-    public Match(Player[] players) {
+    public static Match fromRecord(MatchRecord record, Function<Integer, Player> IDToPlayer) {
+        return new Match(
+                record.matchID(),
+                new Player[] {IDToPlayer.apply(record.player1ID()), IDToPlayer.apply(record.player2ID())},
+                record.winnerNum()
+        );
+    }
+
+    public Match(int ID, Player[] players, Optional<Integer> winnerNum) {
+        this.ID = ID;
         this.players = players.length == MATCH_PLAYER_NUM ? players : new Player[MATCH_PLAYER_NUM];
-
-        int rand = random.nextInt(0, MATCH_PLAYER_NUM + 1);
-        this.winner = rand == MATCH_PLAYER_NUM ? Optional.empty() : Optional.of(this.players[rand]);
-        this.submitted = false;
+        if (winnerNum.isPresent() && winnerNum.get() > players.length) {
+            winnerNum = Optional.empty();
+        }
+        this.winnerNum = winnerNum;
     }
 
     @Override
     public Optional<Player> getResult() {
-        return winner;
+        return winnerNum.map(num -> players[num-1]);
     }
 
     @Override
     public boolean isTie() {
-        return winner.isEmpty();
+        return winnerNum.isEmpty();
     }
 
-    public boolean wasSubmitted() {
-        return submitted;
+    @Override
+    public int getID() {
+        return ID;
     }
 
-    public void setSubmitted(boolean submitted) {
-        this.submitted = submitted || this.submitted;
+    @Override
+    public boolean isSame(Match other) {
+        return this.equals(other) || ID == other.getID();
     }
 
     public Player[] getPlayers() {

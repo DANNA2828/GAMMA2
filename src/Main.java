@@ -1,5 +1,5 @@
-import work.Leaderboard;
-import work.Player;
+import work.tournaments.Leaderboard;
+import work.tournaments.Player;
 
 public class Main {
 
