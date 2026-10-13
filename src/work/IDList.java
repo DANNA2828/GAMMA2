@@ -2,6 +2,7 @@ package work;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class IDList<T extends Comparable<T> & WithID> {
 
@@ -43,13 +44,13 @@ public class IDList<T extends Comparable<T> & WithID> {
         return entries.size();
     }
 
-    public T getByID(int ID) {
+    public Optional<T> getByID(int ID) {
         for (T e : entries) {
             if (e.getID() == ID) {
-                return e;
+                return Optional.of(e);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
 }

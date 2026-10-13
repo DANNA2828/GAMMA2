@@ -23,7 +23,7 @@ public class Tournament {
     public Tournament(int ID, String name, Player[] players, TournamentType type) {
         this.ID = ID;
         this.name = name;
-        this.players = new IDList<>(players);
+        this.players = new IDList<>();
         this.matches = new IDList<>();
         this.leaderboard = new Leaderboard<>();
         this.winPoints = type.getWinPoints();
@@ -35,7 +35,7 @@ public class Tournament {
     public void registerPlayer(Player player) {
         if (!players.isRegistered(player) && !hasStarted) {
             players.register(player);
-            leaderboard.addToLeaderboard(player);
+            leaderboard.register(player);
         }
     }
 
@@ -66,16 +66,24 @@ public class Tournament {
     }
 
     private boolean canSubmitResult(Match match) {
+        return arePlayersValid(match) && !matches.isRegistered(match) && !hasStarted;
+    }
+
+    private boolean arePlayersValid(Match match) {
         for (int i = 0; i < match.getPlayers().length - 1; i++) {
+            Player p1 = match.getPlayers()[i];
+            Player p2 = match.getPlayers()[i+1];
             if (
-                    match.getPlayers()[i].isSame(match.getPlayers()[i+1])
-                    || !players.isRegistered(match.getPlayers()[i])
-                    || !players.isRegistered(match.getPlayers()[i+1])
+                    p1 == null
+                    || p2 == null
+                    || p1.isSame(p2)
+                    || !players.isRegistered(p1)
+                    || !players.isRegistered(p2)
             ) {
                 return false;
             }
         }
-        return !matches.isRegistered(match);
+        return true;
     }
 
     private boolean isTournamentIDCorrect(MatchRecord record) {

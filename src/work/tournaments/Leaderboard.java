@@ -21,19 +21,19 @@ public class Leaderboard<T extends Comparable<T> & WithID> {
                 return key;
             }
         }
-        return null;
+        return object;
     }
 
     public Integer getScore(T object) {
         return leaderboard.get(getKey(object));
     }
 
-    public void addToLeaderboard(T object) {
+    public void register(T object) {
         addPoints(object, 0);
     }
 
     public void addPoints(T object, int amount) {
-        leaderboard.put(object, (getScore(object) != null ? getScore(object) : 0) + amount);
+        leaderboard.put(getKey(object), (getScore(object) != null ? getScore(object) : 0) + amount);
     }
 
     public ArrayList<T> getStandings() {

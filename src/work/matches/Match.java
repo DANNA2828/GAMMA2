@@ -15,10 +15,13 @@ public class Match implements Result<Player>, WithID, Comparable<Match> {
     private final Player[] players;
     private final Optional<Integer> winnerNum;
 
-    public static Match fromRecord(MatchRecord record, Function<Integer, Player> IDToPlayer) {
+    public static Match fromRecord(MatchRecord record, Function<Integer, Optional<Player>> IDToPlayer) {
         return new Match(
                 record.matchID(),
-                new Player[] {IDToPlayer.apply(record.player1ID()), IDToPlayer.apply(record.player2ID())},
+                new Player[] {
+                        IDToPlayer.apply(record.player1ID()).orElse(null),
+                        IDToPlayer.apply(record.player2ID())
+                },
                 record.winnerNum()
         );
     }
