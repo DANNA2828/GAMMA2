@@ -4,6 +4,7 @@ public abstract class BoundPointsSystem extends PointsSystem implements BoundSys
 
     public BoundPointsSystem(int current) {
         super(current);
+        bind();
     }
 
     @Override

@@ -6,7 +6,7 @@ import work2.stats.Stats;
 public class ArcaneBolt {
 
     public static boolean qualifies(Combatant acting) {
-        return acting.getStats().getMana().getCurrent() >= 10;
+        return acting.getStats().getMana().getCurrent() >= 10 && !acting.getStats().getHealth().isDead();
     }
 
     public static void affectActing(Combatant acting) {

@@ -6,7 +6,7 @@ import work2.stats.Stats;
 public class FirstAid {
 
     public static boolean qualifies(Combatant acting) {
-        return true;
+        return !acting.getStats().getHealth().isDead();
     }
 
     public static void affectActing(Combatant acting) {
